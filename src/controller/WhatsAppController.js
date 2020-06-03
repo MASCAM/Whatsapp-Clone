@@ -1,4 +1,7 @@
-class WhatsAppController {
+import {Format} from './../utils/Format';
+import {CameraController} from './CameraController';
+
+export class WhatsAppController {
 
     constructor() {
 
@@ -212,12 +215,14 @@ class WhatsAppController {
                 'height': 'calc(100%)', 
 
             });
+            this._camera = new CameraController(this.el.videoCamera);
 
         });
         this.el.btnClosePanelCamera.on('click', e => {
 
             this.closeAllMainPanel();
             this.el.panelMessagesContainer.show();
+            this._camera.stop();
 
         });
         this.el.btnTakePicture.on('click', e => {
@@ -324,7 +329,20 @@ class WhatsAppController {
                     img.addClass(name);
 
                 });
-                this.el.inputText.appendChild(img);
+                let cursor = window.getSelection(); //pega a seleção atual de texto do cursor
+                if (!cursor.focusNode || !cursor.focusNode.id == 'id-text') { //para verificar se o cursor está sobre o texto
+
+                    this.el.inputText.focus();
+                    cursor = window.getSelection(); //pega a seleção atual de texto
+
+                }
+                let range = document.createRange(); //para criar uma extensão de seleção
+                range = cursor.getRangeAt(0); //pega o início de seleção no cursor
+                range.deleteContents(); //para deletar os valores dentro do alcance da seleção
+                let frag = document.createDocumentFragment(); 
+                frag.appendChild(img); //coloca o emoji no fragmento de documento
+                range.insertNode(frag); //insere o fragmento na seleção
+                range.setStartAfter(img);
                 this.el.inputText.dispatchEvent(new Event('keyup')); //para esconder o texto de fundo
 
             });

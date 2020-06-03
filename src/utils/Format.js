@@ -1,4 +1,4 @@
-class Format {
+export class Format {
 
     static getCamelCase(text) { //para passar o nome dos id's do document para camelCase
 

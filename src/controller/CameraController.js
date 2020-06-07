@@ -31,4 +31,15 @@ export class CameraController {
 
     } //fechando o stop()
 
+    takePicture(mimeType = 'image/png') { //método para efetivamente tirar a foto
+
+        let canvas = document.createElement('canvas'); //para criar um canvas no html
+        canvas.setAttribute('height', 664);
+        canvas.setAttribute('width', 885); //atribui a altura e largura do canvas de acordo com o vídeo
+        let context = canvas.getContext('2d');
+        context.drawImage(this._videoEl, 0, 0, 885, 664); //desenha a imagem de acordo com o vídeo e o tamanho do canvas
+        return canvas.toDataURL(mimeType);
+
+    } //fechando o takePicture()
+
 } //fechando a classe CameraController

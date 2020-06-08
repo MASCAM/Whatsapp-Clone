@@ -16149,10 +16149,4 @@ html[dir=rtl] ._2ICcy:after{
     display: flex;
     justify-content: center;
 }
-#img-panel-document-preview{
-    z-index: 2;
-    height: 516px;
-    width: 641.25px;
-    margin: 0 auto;
-    text-align: center;    
-}
+

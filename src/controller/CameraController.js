@@ -23,11 +23,15 @@ export class CameraController {
 
     stop() { //para de gravar com a câmera
 
-        this._stream.getTracks().forEach(track => { //pega as faixas de gravação e para cada uma delas
+        if (this._stream) {
+            
+            this._stream.getTracks().forEach(track => { //pega as faixas de gravação e para cada uma delas
 
-            track.stop(); //para a faixa
-
-        });
+                track.stop(); //para a faixa
+    
+            });
+            
+        }
 
     } //fechando o stop()
 

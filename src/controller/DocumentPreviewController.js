@@ -48,32 +48,30 @@ export class DocumentPreviewController {
 
                             pdfDocument.getPage(1).then(page => {
 
-                                let viewport = page.getViewport(1);
+                                var viewport = page.getViewport({ scale: 1, });
                                 let canvas = document.createElement('canvas');
                                 let canvasContext = canvas.getContext('2d');
                                 canvas.width = viewport.width;                      //setAttribute('height', 664);
                                 canvas.height = viewport.height;                    //setAttribute('width', 885); atribui a altura e largura do canvas de acordo com o pdf
-                                page.render({
+                                var renderContext = {
 
-                                    canvasContext: canvasContext,
-                                    viewport: viewport,
+                                    canvasContext,
+                                    viewport,
 
-                                }).then(() => {
+                                }
+                                var renderTask = page.render(renderContext).promise.then(() => {
 
-                                    console.log(page);
                                     let s = (pdfDocument.numPages > 1) ? 's' : '';
                                     resolve({
                             
-                                        src: canvas.toDataURL('image/png'),
+                                        src: canvas.toDataURL('image/jpg'),
                                         info: `${pdfDocument.numPages} página${s}`,
+                                        type: 'pdf',
                                     
                                     });
 
-                                }).catch(err => {
-
-                                    reject(err);
-
                                 });
+                                
 
                             }).catch(err => {
 

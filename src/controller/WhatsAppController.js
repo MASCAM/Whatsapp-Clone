@@ -342,29 +342,28 @@ export class WhatsAppController {
 
             this.el.recordMicrophone.show();
             this.el.btnSendMicrophone.hide();
-            this.startRecordMicrophoneTime();
             this._microphoneController = new MicrophoneController();
-            this._microphoneController.on('play', () => { //evento que acontece quando começa a gravar
+            this._microphoneController.on('ready', audio => { //evento que acontece quando está pronto para começar a gravar
 
-                console.log('A');
+                this._microphoneController.startRecorder(); // começa a gravar
 
             });
-            this._microphoneController.on('play', () => { //evento que acontece quando começa a gravar
+            this._microphoneController.on('recordtimer', timer => {
 
-                console.log('B');
+                this.el.recordMicrophoneTimer.innerHTML = Format.toTime(timer);
 
             });
 
         });
         this.el.btnCancelMicrophone.on('click', e => {
 
-            this._microphoneController.stop();
+            this._microphoneController.stopRecorder();
             this.closeRecordMicrophone();
 
         });
         this.el.btnFinishMicrophone.on('click', e => {
 
-            this._microphoneController.stop();
+            this._microphoneController.stopRecorder();
             this.closeRecordMicrophone();
 
         });
@@ -440,22 +439,10 @@ export class WhatsAppController {
 
     } //fechando o initEvents()
 
-    startRecordMicrophoneTime() { //método para iniciar a medida do tempo de gravação
-
-        let start = Date.now();
-        this._recordMicrophoneInterval = setInterval(() => {
-
-            this.el.recordMicrophoneTimer.innerHTML = Format.toTime(Date.now() - start);
-
-        }, 100);
-
-    } //fechando o startRecordMicrophoneTime()
-
     closeRecordMicrophone() { //método para finalizar a gravação do microfone
 
         this.el.recordMicrophone.hide();
         this.el.btnSendMicrophone.show();
-        clearInterval(this._recordMicrophoneInterval);
 
     } //fechando o closeRecordMicrophone()
 

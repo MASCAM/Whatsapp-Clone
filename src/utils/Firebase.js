@@ -28,12 +28,12 @@ export class Firebase {
 
     init() { //método que configura o firebase
 
-        if (!this._initialized) {
+        if (!window._initializedFirebase) {
             // Initialize Firebase
             firebase.initializeApp(this._config);
             firebase.analytics();
             firebase.firestore().settings({}); //configura o firestore
-            this._initialized = true;
+            window._initializedFirebase = true;
 
         }
 
@@ -50,5 +50,31 @@ export class Firebase {
         return firebase.storage(); //retorna o firebase storage
 
     } //fechando o hd()
+
+    initAuth() { //inicializar autenticação do Firebase
+
+        return new Promise((resolve, reject) => {
+
+            let provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithPopup(provider).then(result => { //para efetuar o login
+
+                let token = result.credential.accessToken;
+                let user = result.user;
+                resolve({
+
+                    user, 
+                    token,
+                    
+                });
+
+            }).catch(err => {
+
+                reject(err);
+
+            });
+
+        });
+
+    } //fechando o initAuth()
 
 }

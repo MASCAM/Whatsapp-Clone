@@ -3,10 +3,17 @@ import {CameraController} from './CameraController';
 import {MicrophoneController} from './MicrophoneController';
 import {DocumentPreviewController} from './DocumentPreviewController';
 import {Firebase} from './../utils/Firebase';
+import {User} from '../model/User';
 
 export class WhatsAppController {
 
     constructor() {
+        
+        //inicia o firebase no controller
+        this._firebase = new Firebase();
+
+        //inicia autenticação do Firebase
+        this.initAuth();
 
         //carrega os métodos customizados para os elementos do documento
         this.elementsPrototype();
@@ -17,10 +24,37 @@ export class WhatsAppController {
         //iniciar as escutas de eventos nos elementos
         this.initEvents();
 
-        //inicia o firebase no controller
-        this._firebase = new Firebase();
-
     } //fechando o constructor()
+
+    initAuth() { //inicia autenticação do Firebase
+
+        this._firebase.initAuth().then((response) => {
+
+            this._user = new User();
+            let userRef = User.findByEmail(response.user.email);
+            userRef.set({
+
+                name: response.user.displayName,
+                email: response.user.email,
+                photo: response.user.photoURL,
+
+            }).then(() => {
+
+                this.el.appContent.css({
+
+                    display: 'flex',
+    
+                });
+
+            });
+
+        }).catch(err => {
+
+            console.error(err);
+
+        });
+
+    } //fechando o initAuth()
 
     loadElements() { //carrega os elementos html do documento
 

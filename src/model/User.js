@@ -1,5 +1,5 @@
 import {Firebase} from './../utils/Firebase';
-import { ClassEvent } from '../utils/ClassEvent';
+import {ClassEvent} from '../utils/ClassEvent';
 
 export class User extends ClassEvent { //classe para o modelo de usuário que herda os atributos e métodos da ClassEvent
 

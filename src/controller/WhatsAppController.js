@@ -30,15 +30,28 @@ export class WhatsAppController {
 
         this._firebase.initAuth().then((response) => {
 
-            this._user = new User();
-            let userRef = User.findByEmail(response.user.email);
-            userRef.set({
+            this._user = new User(response.user.email);
+            this._user.on('datachange', data => { //para alterar os dados exibidos ao usuário
 
-                name: response.user.displayName,
-                email: response.user.email,
-                photo: response.user.photoURL,
+                document.querySelector('title').innerHTML = data.name + ' - WhatsApp Clone';
+                this.el.inputNamePanelEditProfile.innerHTML = data.name; //muda o nome no painel de editar perfil
+                if (data.photo) { //se o usuário possuir uma foto 
 
-            }).then(() => {
+                    let photo = this.el.imgPanelEditProfile;
+                    photo.src = data.photo;
+                    photo.show(); //mostra a foto no painel de edição
+                    this.el.imgDefaultPanelEditProfile.hide(); //oculta a foto padrão
+                    let userPhoto = this.el.myPhoto.querySelector('img'); //foto na pagina principal
+                    userPhoto.src = data.photo;
+                    userPhoto.show();
+
+                }
+
+            });
+            this._user.name = response.user.displayName;
+            this._user.email = response.user.email;
+            this._user.photo = response.user.photoURL;
+            this._user.save().then(() => {
 
                 this.el.appContent.css({
 
@@ -198,13 +211,11 @@ export class WhatsAppController {
             }
 
         });
-
         this.el.btnSavePanelEditProfile.on('click', e => { //botão de salvar perfil
 
             console.log(this.el.inputNamePanelEditProfile.innerHTML);
 
         });
-
         this.el.formPanelAddContact.on('submit', e=> { //adicionar novo contato
 
             e.preventDefault();
